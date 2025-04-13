@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background-color: #ff7f50;
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .meal-item {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .meal-text {
+      flex: 1;
+    }
+
+    .meal-item img {
+      width: 100px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .meal-item h3 {
+      margin-bottom: 5px;
+    }
+
+    .meal-price {
+      font-weight: bold;
+      margin-top: 5px;
+      color: #444;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .meal-actions {
+      margin-top: 10px;
+    }
+
+    button.remove {
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button.remove:hover {
+      background: #ccc;
+    }
+
+    .bottom-actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    button.clear,
+    button.checkout,
+    a.back {
+      background: #ff7f50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      margin: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button.clear:hover,
+    button.checkout:hover,
+    a.back:hover {
+      background: #e66035;
+    }
+
+    .summary {
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    .total-cost {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: green;
+    }
+    
+
+    @media screen and (max-width: 600px) {
+      .meal-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .meal-item img {
+        margin-top: 10px;
+      }
+    }
+    nav {
+      background-color: #ff7f50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>🍴 CustomMeals</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>
+  <header>
+    <h1>Your Cart 🛒</h1>
+  </header>
+
+  <div class="container" id="cart-container">
+    <p>Loading your selected meals...</p>
+  </div>
+
+  <script>
+    const cartContainer = document.getElementById("cart-container");
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log(cart)
+    // Add price mapping
+    const mealPrices = {
+      "Fresh Garden Salad": 7.99,
+      "Fluffy Pancakes": 5.49,
+      "Grilled Steak": 14.99
+    };
+
+    const mealImages = {
+      "Fresh Garden Salad": "https://source.unsplash.com/400x300/?salad",
+      "Fluffy Pancakes": "https://source.unsplash.com/400x300/?pancakes",
+      "Grilled Steak": "https://source.unsplash.com/400x300/?steak"
+    };
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      cartContainer.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Your cart is empty.</p><a href='index.html' class='back'>← Back to Meals</a>";
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'meal-item';
+        const imageSrc = item.image || "https://via.placeholder.com/100x80?text=Meal";
+        const price = mealPrices[item.name] || 9.99;
+        total += price;
+
+        div.innerHTML = `
+          <div class="meal-text">
+            <h3>${item.name}</h3>
+            <p><strong>Ingredients:</strong></p>
+            <ul>
+              ${item.ingredients.map(i => `<li>${i}</li>`).join('')}
+            </ul>
+            <p class="meal-price">Price: $${price.toFixed(2)}</p>
+            <div class="meal-actions">
+              <button class="remove" onclick="removeItem(${index})">Remove</button>
+            </div>
+          </div>
+          <img src="${imageSrc}" alt="${item.name}">
+        `;
+        cartContainer.appendChild(div);
+      });
+
+      const totalItems = document.createElement('p');
+      totalItems.className = 'summary';
+      totalItems.textContent = `Total meals in cart: ${cart.length}`;
+      cartContainer.appendChild(totalItems);
+
+      const totalCost = document.createElement('p');
+      totalCost.className = 'total-cost';
+      totalCost.textContent = `Estimated Total: $${total.toFixed(2)}`;
+      cartContainer.appendChild(totalCost);
+
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'bottom-actions';
+
+      const checkoutBtn = document.createElement('button');
+      checkoutBtn.className = 'checkout';
+      checkoutBtn.textContent = 'Proceed to Checkout';
+      checkoutBtn.onclick = () => {
+        window.location.href = 'checkout.html';
+      };
+
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'clear';
+      clearBtn.textContent = 'Clear Cart';
+      clearBtn.onclick = clearCart;
+
+      const backLink = document.createElement('a');
+      backLink.href = 'index.html';
+      backLink.className = 'back';
+      backLink.textContent = '← Back to Meals';
+
+      actionsDiv.appendChild(checkoutBtn);
+      actionsDiv.appendChild(clearBtn);
+      actionsDiv.appendChild(backLink);
+      cartContainer.appendChild(actionsDiv);
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      saveCart();
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      saveCart();
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

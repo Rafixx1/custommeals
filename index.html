@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Meals</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+    }
+
+    nav {
+      background-color: #ff7f50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+
+    .cta-section {
+      text-align: center;
+      padding: 60px 20px;
+      background: #f5e0cc;
+    }
+
+    .meal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .meal-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .meal-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .meal-card h3 {
+      margin-top: 10px;
+      color: #ff7f50;
+    }
+
+    .meal-card p {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .meal-card button,
+    .meal-card a.customize-btn {
+      background: #ff7f50;
+      border: none;
+      padding: 10px 16px;
+      color: white;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #ff7f50;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div><strong>🍴 CustomMeals</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>
+
+  <section class="cta-section">
+    <h2>Ready to Create Your Perfect Dish?</h2>
+    <p>Pick your ingredients, see your meal live, and save it just the way you like it.</p>
+    <a href="builder.html"
+      style="display:inline-block;background:#ff7f50;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;">🍽️
+      Build Your Meal</a>
+  </section>
+
+
+
+  <div class="meal-grid">
+    <div class="meal-card">
+      <img src="images/sfiha.jfif" alt="Sfiha">
+      <h3>Sfiha</h3>
+      <p class="description">Mini meat pies</p>
+      <p class="ingredients">Ingredients: Lamb, Tomatoes, Onion</p>
+      <a href="meal.html?name=sfiha" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Arayes.jpg" alt="Arayes">
+      <h3>Arayes</h3>
+      <p class="description">Stuffed grilled pita</p>
+      <p class="ingredients">Ingredients: Pita, Kafta</p>
+      <a href="meal.html?name=arayes" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/lentil_soup.jfif" alt="Lentil Soup">
+      <h3>Lentil Soup</h3>
+      <p class="description">Warm comfort soup</p>
+      <p class="ingredients">Ingredients: Lentils, Carrot, Onion</p>
+      <a href="meal.html?name=lentil_soup" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/shawarma.jpeg" alt="Shawarma">
+      <h3>Shawarma</h3>
+      <p class="description">Marinated meat wrap</p>
+      <p class="ingredients">Ingredients: Beef, Garlic, Pickles</p>
+      <a href="meal.html?name=shawarma" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Makloube.jpg" alt="Makloubeh">
+      <h3>Makloubeh</h3>
+      <p class="description">Upside-down rice dish</p>
+      <p class="ingredients">Ingredients: Rice, Eggplant, Chicken</p>
+      <a href="meal.html?name=makloubeh" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/knafeh.jpg" alt="Knafeh">
+      <h3>Knafeh</h3>
+      <p class="description">Cheese and semolina dessert</p>
+      <p class="ingredients">Ingredients: Cheese, Semolina, Syrup</p>
+      <a href="meal.html?name=knafeh" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Malfouf.webp" alt="Malfouf">
+      <h3>Malfouf</h3>
+      <p class="description">Stuffed cabbage rolls</p>
+      <p class="ingredients">Ingredients: Cabbage, Rice, Meat</p>
+      <a href="meal.html?name=malfouf" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Znood el sit.jfif" alt="Znood El Sit">
+      <h3>Znood El Sit</h3>
+      <p class="description">Cream-filled phyllo rolls</p>
+      <p class="ingredients">Ingredients: Phyllo, Cream, Syrup</p>
+      <a href="meal.html?name=znood_el_sit" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/balila.jpg" alt="Balila">
+      <h3>Balila</h3>
+      <p class="description">Warm chickpea dish</p>
+      <p class="ingredients">Ingredients: Chickpeas, Garlic, Lemon</p>
+      <a href="meal.html?name=balila" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Loubieh bzeit.jfif" alt="Loubieh Bzeit">
+      <h3>Loubieh Bzeit</h3>
+      <p class="description">Green beans in olive oil</p>
+      <p class="ingredients">Ingredients: Green Beans, Tomato, Garlic</p>
+      <a href="meal.html?name=loubieh_bzeit" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Fried califlower.jfif" alt="Fried Cauliflower">
+      <h3>Fried Cauliflower</h3>
+      <p class="description">Golden brown bites</p>
+      <p class="ingredients">Ingredients: Cauliflower, Tahini</p>
+      <a href="meal.html?name=fried_cauliflower" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Makanek.jfif" alt="Makanek">
+      <h3>Makanek</h3>
+      <p class="description">Lebanese sausages</p>
+      <p class="ingredients">Ingredients: Sausage, Pomegranate Molasses</p>
+      <a href="meal.html?name=makanek" class="customize-btn">Customize</a>
+    </div>
+
+    <div class="meal-card">
+      <img src="images/Beid b awarma.jfif" alt="Beid bi Awarma">
+      <h3>Beid bi Awarma</h3>
+      <p class="description">Eggs & meat fat</p>
+      <p class="ingredients">Ingredients: Eggs, Lamb fat</p>
+      <a href="meal.html?name=beid_bi_awarma" class="customize-btn">Customize</a>
+    </div>
+  </div>
+
+    <script>
+      function orderMeal(mealName) {
+        alert('✅ ' + mealName + ' added to your cart!');
+      }
+    </script>
+
+</body>
+<footer>
+  &copy; 2025 CustomMeals. All rights reserved.
+</footer>
+
+</html>

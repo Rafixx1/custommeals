@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #ff7f50;
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .meal-summary {
+      margin-top: 30px;
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .total-cost {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: green;
+      margin-top: 10px;
+    }
+
+    .checkout-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .checkout-btn {
+      background: #ff7f50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .back-btn {
+      padding: 12px 20px;
+      background: #888;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 1rem;
+      text-align: center;
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    .checkout-btn:hover {
+      background: #e66035;
+    }
+
+    .back-btn:hover {
+      background: #666;
+    }
+
+    .thank-you {
+      display: none;
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 30px;
+      color: green;
+    }
+
+    .thank-you small {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .hidden {
+      display: none;
+    }
+    nav {
+      background-color: #ff7f50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>🍴 CustomMeals</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>
+  <header>
+    <h1>Checkout</h1>
+  </header>
+
+  <div class="container">
+    <h2>Customer Information</h2>
+    <form id="checkout-form">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required pattern="[0-9+ ]+">
+
+      <label for="address">Delivery Address</label>
+      <textarea id="address" rows="3" required></textarea>
+
+      <label for="payment">Payment Method</label>
+      <select id="payment" onchange="toggleCardFields()" required>
+        <option value="cash">Cash on Delivery</option>
+        <option value="card">Credit/Debit Card</option>
+      </select>
+
+      <div id="card-fields" class="hidden">
+        <label for="card-number">Card Number</label>
+        <input type="text" id="card-number" maxlength="16" placeholder="1234 5678 9012 3456">
+
+        <label for="expiry">Expiry Date</label>
+        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5">
+
+        <label for="cvv">CVV</label>
+        <input type="text" id="cvv" maxlength="3" placeholder="123">
+      </div>
+
+      <div class="meal-summary" id="meal-summary">
+        <strong>Selected Meals:</strong>
+        <ul id="meal-list"></ul>
+        <div class="total-cost" id="total-cost"></div>
+      </div>
+
+      <div class="checkout-actions">
+        <button type="submit" class="checkout-btn">Place Order</button>
+        <a href="cart.html" class="back-btn">← Back to Cart</a>
+      </div>
+    </form>
+
+    <div class="thank-you" id="thank-you">
+      ✅ Thank you for your order! We'll start preparing it shortly.
+      <small id="eta"></small>
+      <small id="confirmation-msg"></small>
+    </div>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const mealList = document.getElementById("meal-list");
+    const form = document.getElementById("checkout-form");
+    const thankYou = document.getElementById("thank-you");
+    const eta = document.getElementById("eta");
+    const confirmationMsg = document.getElementById("confirmation-msg");
+    const cardFields = document.getElementById("card-fields");
+    const totalCostDisplay = document.getElementById("total-cost");
+
+    const mealPrices = {
+      "Fresh Garden Salad": 7.99,
+      "Fluffy Pancakes": 5.49,
+      "Grilled Steak": 14.99
+    };
+
+    let total = 0;
+    if (cart.length === 0) {
+      mealList.innerHTML = "<li>Your cart is empty.</li>";
+      totalCostDisplay.innerHTML = "";
+    } else {
+      cart.forEach(item => {
+        const li = document.createElement("li");
+        const price = mealPrices[item.name] || 9.99;
+        li.textContent = `${item.name} - $${price.toFixed(2)}`;
+        mealList.appendChild(li);
+        total += price;
+      });
+
+      totalCostDisplay.textContent = `Estimated Total: $${total.toFixed(2)}`;
+    }
+
+    function toggleCardFields() {
+      const paymentMethod = document.getElementById("payment").value;
+      cardFields.classList.toggle("hidden", paymentMethod !== "card");
+    }
+
+    function estimateDelivery() {
+      const min = 30;
+      const max = 50;
+      const time = Math.floor(Math.random() * (max - min + 1)) + min;
+      return `${time} minutes`;
+    }
+
+    function saveOrderToHistory(order) {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push(order);
+      localStorage.setItem("orders", JSON.stringify(orders));
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const paymentMethod = document.getElementById("payment").value;
+
+      if (paymentMethod === "card") {
+        const cardNum = document.getElementById("card-number").value;
+        const expiry = document.getElementById("expiry").value;
+        const cvv = document.getElementById("cvv").value;
+        if (!cardNum || !expiry || !cvv) {
+          alert("Please fill out all card details.");
+          return;
+        }
+      }
+
+      const order = {
+        name,
+        phone,
+        address,
+        payment: paymentMethod,
+        total,
+        items: cart,
+        time: new Date().toLocaleString()
+      };
+
+      saveOrderToHistory(order);
+      localStorage.removeItem("cart");
+
+      form.style.display = "none";
+      thankYou.style.display = "block";
+      eta.textContent = `Estimated Arrival: ${estimateDelivery()}`;
+      confirmationMsg.textContent = `We will contact you shortly at ${phone}.`;
+    });
+  </script>
+
+</body>
+</html>

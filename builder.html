@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Builder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff7f50;
+    }
+
+    .builder {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .ingredients,
+    .preview {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .preview ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .preview li {
+      background: #ff7f5030;
+      margin: 6px 0;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+    button {
+      background: #ff7f50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: #e65a2f;
+    }
+
+    .add-ingredient {
+      margin-top: 20px;
+    }
+
+    .add-ingredient input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 60%;
+      margin-right: 10px;
+    }
+
+    .add-ingredient button {
+      padding: 8px 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .add-ingredient button:hover {
+      background: #3e8e41;
+    }
+    .nameinput input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 60%;
+      margin-right: 10px;
+    }
+    nav {
+      background-color: #ff7f50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>🍴 CustomMeals</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>s
+  <h1>Build Your Custom Meal</h1>
+
+  <div class="builder">
+    <div class="ingredients">
+      <h3>Choose Ingredients</h3>
+      <div class="nameinput">
+        <input type="text" id="mealname" placeholder="Meal Name.">
+      </div>
+      <label><input type="checkbox" value="Chicken" onchange="updateMeal()"> Chicken</label>
+      <label><input type="checkbox" value="Beef" onchange="updateMeal()"> Beef</label>
+      <label><input type="checkbox" value="Tofu" onchange="updateMeal()"> Tofu</label>
+      <label><input type="checkbox" value="Lettuce" onchange="updateMeal()"> Lettuce</label>
+      <label><input type="checkbox" value="Tomato" onchange="updateMeal()"> Tomato</label>
+      <label><input type="checkbox" value="Cheese" onchange="updateMeal()"> Cheese</label>
+      <label><input type="checkbox" value="Rice" onchange="updateMeal()"> Rice</label>
+      <label><input type="checkbox" value="Avocado" onchange="updateMeal()"> Avocado</label>
+      <div class="add-ingredient">
+        <input type="text" id="new-ingredient" placeholder="Add new ingredient...">
+        <button onclick="addIngredient()">➕ Add</button>
+      </div>
+      <button onclick="saveMeal()">Add to Cart</button>
+    </div>
+
+    <div class="preview">
+      <h3>Meal Preview</h3>
+      <ul id="preview-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    function updateMeal() {
+      const checked = [...document.querySelectorAll('input[type="checkbox"]:checked')];
+      const list = document.getElementById("preview-list");
+      list.innerHTML = "";
+      checked.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item.value;
+        list.appendChild(li);
+      });
+    }
+
+    function saveMeal() {
+      const ingredients = [...document.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value);
+      if (ingredients.length === 0) {
+        alert("Please select at least one ingredient.");
+        return;
+      }
+      let mealname = document.getElementById("mealname").value || ""
+
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push({
+        name: mealname,
+        ingredients: ingredients
+      });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert("✅ Meal Added to Cart!");
+    }
+    function addIngredient() {
+      const input = document.getElementById("new-ingredient");
+      const newIngredient = input.value.trim();
+
+      if (!newIngredient) {
+        alert("Please enter a valid ingredient name.");
+        return;
+      }
+
+      // Check if ingredient already exists
+      const exists = [...document.querySelectorAll('input[type="checkbox"]')]
+        .some(cb => cb.value.toLowerCase() === newIngredient.toLowerCase());
+
+      if (exists) {
+        alert("This ingredient already exists.");
+        return;
+      }
+
+      // Create and auto-check the new ingredient
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = newIngredient;
+      checkbox.checked = true;
+      checkbox.onchange = updateMeal;
+      label.appendChild(checkbox);
+      label.append(" " + newIngredient);
+
+      // Insert before the add-ingredient section
+      const container = document.querySelector(".add-ingredient");
+      container.parentNode.insertBefore(label, container);
+
+      // Refresh meal preview
+      updateMeal();
+
+      // Clear the input
+      input.value = "";
+    }
+
+
+  </script>
+
+</body>
+
+</html>

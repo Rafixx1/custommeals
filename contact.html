@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+    }
+
+    header {
+      background-color: #ff7f50;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7f50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e66035;
+    }
+
+    .review-section {
+      margin-top: 40px;
+    }
+
+    .review {
+      background: #f5f5f5;
+      padding: 15px 20px;
+      border-left: 4px solid #ff7f50;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .review small {
+      display: block;
+      margin-top: 5px;
+      color: #555;
+    }
+
+    .review-buttons {
+      margin-top: 10px;
+    }
+
+    .review-buttons button {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      margin-right: 10px;
+      background-color: #999;
+    }
+
+    .review-buttons button:hover {
+      background-color: #777;
+    }
+
+    .review-buttons .delete {
+      background-color: #d9534f;
+    }
+
+    .review-buttons .delete:hover {
+      background-color: #c9302c;
+    }
+    nav {
+      background-color: #ff7f50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>🍴 CustomMeals</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>
+<header>
+  <h1>Contact Us</h1>
+</header>
+
+<div class="container">
+  <form onsubmit="submitMessage(event)">
+    <label for="name">Your Name</label>
+    <input type="text" id="name" required>
+
+    <label for="email">Your Email</label>
+    <input type="email" id="email" required>
+
+    <label for="message">Your Message</label>
+    <textarea id="message" rows="5" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #eee;">
+
+  <h2 style="color:#ff7f50;">Leave a Review</h2>
+  <form onsubmit="submitReview(event)">
+    <label for="review-name">Your Name</label>
+    <input type="text" id="review-name" required>
+
+    <label for="review-text">Your Review</label>
+    <textarea id="review-text" rows="4" required></textarea>
+
+    <label for="rating">Your Rating</label>
+    <select id="rating" required>
+      <option value="">Select rating</option>
+      <option value="5">★★★★★</option>
+      <option value="4">★★★★☆</option>
+      <option value="3">★★★☆☆</option>
+      <option value="2">★★☆☆☆</option>
+      <option value="1">★☆☆☆☆</option>
+    </select>
+
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <div class="review-section">
+    <h2 style="color:#ff7f50;">Customer Reviews</h2>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+  function submitMessage(e) {
+    e.preventDefault();
+    alert("✅ Message sent! We'll get back to you soon.");
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("message").value = "";
+  }
+
+  function submitReview(e) {
+    e.preventDefault();
+    const name = document.getElementById("review-name").value;
+    const review = document.getElementById("review-text").value;
+    const rating = document.getElementById("rating").value;
+
+    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    const reviewData = {
+      id: Date.now(),
+      name,
+      review,
+      rating,
+      date: new Date().toLocaleDateString()
+    };
+
+    storedReviews.push(reviewData);
+    localStorage.setItem("reviews", JSON.stringify(storedReviews));
+
+    renderReviews();
+    alert(`✅ Thank you for your ${rating}-star review, ${name}!`);
+
+    document.getElementById("review-name").value = "";
+    document.getElementById("review-text").value = "";
+    document.getElementById("rating").value = "";
+  }
+
+  function renderReviews() {
+    const reviewList = document.getElementById("review-list");
+    const storedReviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    reviewList.innerHTML = "";
+
+    storedReviews.reverse().forEach(r => {
+      const div = document.createElement("div");
+      div.className = "review";
+      div.innerHTML = `
+        <p><strong>${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</strong></p>
+        <p id="text-${r.id}">${r.review}</p>
+        <small>- ${r.name}, ${r.date}</small>
+        <div class="review-buttons">
+          <button onclick="editReview(${r.id})">Edit</button>
+          <button class="delete" onclick="deleteReview(${r.id})">Delete</button>
+        </div>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+
+  function deleteReview(id) {
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    reviews = reviews.filter(r => r.id !== id);
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+    renderReviews();
+  }
+
+  function editReview(id) {
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    const review = reviews.find(r => r.id === id);
+
+    const newText = prompt("Edit your review:", review.review);
+    if (newText !== null && newText.trim() !== "") {
+      review.review = newText;
+      localStorage.setItem("reviews", JSON.stringify(reviews));
+      renderReviews();
+    }
+  }
+
+  renderReviews();
+</script>
+
+</body>
+</html>
