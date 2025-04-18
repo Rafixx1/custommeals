@@ -9,7 +9,7 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f9f9f9;
-      padding: 30px;
+      margin: 0
     }
 
     h1 {
@@ -90,6 +90,7 @@
     .add-ingredient button:hover {
       background: #3e8e41;
     }
+
     .nameinput input {
       padding: 8px;
       border: 1px solid #ccc;
@@ -97,6 +98,7 @@
       width: 60%;
       margin-right: 10px;
     }
+
     nav {
       background-color: #ff7f50;
       padding: 1rem 2rem;
@@ -114,20 +116,76 @@
       margin-left: 15px;
       font-weight: bold;
     }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 0px;
+      background: #ff7f50;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff7f50;
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
   </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("show");
+    }
+  </script>
+
 </head>
+
 <body>
   <nav>
-    <div><strong>🍴 CustomMeals</strong></div>
-    <div>
+    <div><strong>🍴 Baladi Bite</strong></div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="cart.html">🛒 Cart</a>
     </div>
-  </nav>s
+  </nav>
   <h1>Build Your Custom Meal</h1>
-
   <div class="builder">
     <div class="ingredients">
       <h3>Choose Ingredients</h3>
@@ -147,25 +205,45 @@
         <button onclick="addIngredient()">➕ Add</button>
       </div>
       <button onclick="saveMeal()">Add to Cart</button>
+      <br><br>
+      <a href="index.html" class="back-btn">← Back to Meals</a>
     </div>
 
     <div class="preview">
-      <h3>Meal Preview</h3>
+      <h3 id="price">Meal Preview | Price: $0</h3>
       <ul id="preview-list"></ul>
     </div>
   </div>
 
   <script>
     function updateMeal() {
+      console.log("Updating meal preview...");
       const checked = [...document.querySelectorAll('input[type="checkbox"]:checked')];
       const list = document.getElementById("preview-list");
       list.innerHTML = "";
+      let price = 0;
       checked.forEach(item => {
+        price += IngredientsPrices[item.value] || 0.75; // Default price for unlisted ingredients
         const li = document.createElement("li");
         li.textContent = item.value;
         list.appendChild(li);
       });
+      const mealPrice = document.getElementById("price");
+      console.log(price)
+      mealPrice.innerHTML = `Meal Preview | Price: $${price.toFixed(2)}`;
+
     }
+    //CHANGE THIS TO YOUR PRICES
+    const IngredientsPrices = {
+      "Chicken": 5,
+      "Beef": 7,
+      "Tofu": 4,
+      "Lettuce": 1,
+      "Tomato": 1,
+      "Cheese": 2,
+      "Rice": 3,
+      "Avocado": 2
+    };
 
     function saveMeal() {
       const ingredients = [...document.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value);
@@ -176,12 +254,18 @@
       let mealname = document.getElementById("mealname").value || ""
 
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let price = 0;
+      ingredients.forEach(ingredient => {
+        price += IngredientsPrices[ingredient] || 0.75;
+      });
       cart.push({
         name: mealname,
-        ingredients: ingredients
+        ingredients: ingredients,
+        price: price, // Random price between 1 and 10
       });
       localStorage.setItem('cart', JSON.stringify(cart));
       alert("✅ Meal Added to Cart!");
+      window.location.href = "index.html";
     }
     function addIngredient() {
       const input = document.getElementById("new-ingredient");

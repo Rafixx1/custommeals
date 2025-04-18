@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout</title>
   <style>
     body {
@@ -39,7 +40,9 @@
       font-weight: bold;
     }
 
-    input, textarea, select {
+    input,
+    textarea,
+    select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -117,6 +120,7 @@
     .hidden {
       display: none;
     }
+
     nav {
       background-color: #ff7f50;
       padding: 1rem 2rem;
@@ -134,12 +138,65 @@
       margin-left: 15px;
       font-weight: bold;
     }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff7f50;
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
   </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("show");
+    }
+    function ChangePrice() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let price = 0;
+      cart.forEach(item => {
+        price += item.price;
+      });
+
+    }
+  </script>
+
 </head>
+
 <body>
   <nav>
-    <div><strong>🍴 CustomMeals</strong></div>
-    <div>
+    <div><strong>🍴 Baladi Bite</strong></div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
@@ -208,12 +265,6 @@
     const cardFields = document.getElementById("card-fields");
     const totalCostDisplay = document.getElementById("total-cost");
 
-    const mealPrices = {
-      "Fresh Garden Salad": 7.99,
-      "Fluffy Pancakes": 5.49,
-      "Grilled Steak": 14.99
-    };
-
     let total = 0;
     if (cart.length === 0) {
       mealList.innerHTML = "<li>Your cart is empty.</li>";
@@ -221,10 +272,9 @@
     } else {
       cart.forEach(item => {
         const li = document.createElement("li");
-        const price = mealPrices[item.name] || 9.99;
-        li.textContent = `${item.name} - $${price.toFixed(2)}`;
+        li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
         mealList.appendChild(li);
-        total += price;
+        total += item.price;
       });
 
       totalCostDisplay.textContent = `Estimated Total: $${total.toFixed(2)}`;
@@ -248,7 +298,7 @@
       localStorage.setItem("orders", JSON.stringify(orders));
     }
 
-    form.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
       const name = document.getElementById("name").value;
@@ -287,4 +337,5 @@
   </script>
 
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Meals</title>
+  <title>Baladi Bite</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -89,14 +89,57 @@
       color: white;
       margin-top: 40px;
     }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff7f50;
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
   </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("show");
+    }
+  </script>
 </head>
 
 <body>
 
   <nav>
-    <div><strong>🍴 CustomMeals</strong></div>
-    <div>
+    <div><strong>🍴 Baladi Bite</strong></div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
@@ -106,7 +149,7 @@
 
   <section class="cta-section">
     <h2>Ready to Create Your Perfect Dish?</h2>
-    <p>Pick your ingredients, see your meal live, and save it just the way you like it.</p>
+    <p>Pick your ingredients and save it just the way you like!</p>
     <a href="builder.html"
       style="display:inline-block;background:#ff7f50;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;">🍽️
       Build Your Meal</a>
@@ -156,7 +199,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/knafeh.jpg" alt="Knafeh">
+      <img src="images/Knafeh.jpg" alt="Knafeh">
       <h3>Knafeh</h3>
       <p class="description">Cheese and semolina dessert</p>
       <p class="ingredients">Ingredients: Cheese, Semolina, Syrup</p>
@@ -172,7 +215,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/Znood el sit.jfif" alt="Znood El Sit">
+      <img src="images/Znoodelsit.jfif" alt="Znood El Sit">
       <h3>Znood El Sit</h3>
       <p class="description">Cream-filled phyllo rolls</p>
       <p class="ingredients">Ingredients: Phyllo, Cream, Syrup</p>
@@ -180,7 +223,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/balila.jpg" alt="Balila">
+      <img src="images/Balila.jpg" alt="Balila">
       <h3>Balila</h3>
       <p class="description">Warm chickpea dish</p>
       <p class="ingredients">Ingredients: Chickpeas, Garlic, Lemon</p>
@@ -188,7 +231,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/Loubieh bzeit.jfif" alt="Loubieh Bzeit">
+      <img src="images/Loubiehbzeit.jfif" alt="LoubiehBzeit">
       <h3>Loubieh Bzeit</h3>
       <p class="description">Green beans in olive oil</p>
       <p class="ingredients">Ingredients: Green Beans, Tomato, Garlic</p>
@@ -196,7 +239,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/Fried califlower.jfif" alt="Fried Cauliflower">
+      <img src="images/Friedcaliflower.jfif" alt="Fried Cauliflower">
       <h3>Fried Cauliflower</h3>
       <p class="description">Golden brown bites</p>
       <p class="ingredients">Ingredients: Cauliflower, Tahini</p>
@@ -212,7 +255,7 @@
     </div>
 
     <div class="meal-card">
-      <img src="images/Beid b awarma.jfif" alt="Beid bi Awarma">
+      <img src="images/Beidbawarma.jfif" alt="Beid bi Awarma">
       <h3>Beid bi Awarma</h3>
       <p class="description">Eggs & meat fat</p>
       <p class="ingredients">Ingredients: Eggs, Lamb fat</p>
@@ -220,11 +263,11 @@
     </div>
   </div>
 
-    <script>
-      function orderMeal(mealName) {
-        alert('✅ ' + mealName + ' added to your cart!');
-      }
-    </script>
+  <script>
+    function orderMeal(mealName) {
+      alert('✅ ' + mealName + ' added to your cart!');
+    }
+  </script>
 
 </body>
 <footer>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +122,7 @@
       font-weight: bold;
       color: green;
     }
-    
+
 
     @media screen and (max-width: 600px) {
       .meal-item {
@@ -133,6 +134,7 @@
         margin-top: 10px;
       }
     }
+
     nav {
       background-color: #ff7f50;
       padding: 1rem 2rem;
@@ -150,12 +152,57 @@
       margin-left: 15px;
       font-weight: bold;
     }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff7f50;
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
   </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("show");
+    }
+  </script>
+
 </head>
+
 <body>
   <nav>
-    <div><strong>🍴 CustomMeals</strong></div>
-    <div>
+    <div><strong>🍴 Baladi Bite</strong></div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
@@ -175,17 +222,6 @@
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     console.log(cart)
     // Add price mapping
-    const mealPrices = {
-      "Fresh Garden Salad": 7.99,
-      "Fluffy Pancakes": 5.49,
-      "Grilled Steak": 14.99
-    };
-
-    const mealImages = {
-      "Fresh Garden Salad": "https://source.unsplash.com/400x300/?salad",
-      "Fluffy Pancakes": "https://source.unsplash.com/400x300/?pancakes",
-      "Grilled Steak": "https://source.unsplash.com/400x300/?steak"
-    };
 
     function saveCart() {
       localStorage.setItem('cart', JSON.stringify(cart));
@@ -201,10 +237,11 @@
       }
 
       cart.forEach((item, index) => {
+        console.log(item)
         const div = document.createElement('div');
         div.className = 'meal-item';
         const imageSrc = item.image || "https://via.placeholder.com/100x80?text=Meal";
-        const price = mealPrices[item.name] || 9.99;
+        const price = item.price
         total += price;
 
         div.innerHTML = `
@@ -275,4 +312,5 @@
     renderCart();
   </script>
 </body>
+
 </html>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Meal Details</title>
   <style>
     body {
@@ -26,16 +27,19 @@
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
     .content img {
-      width: 100%;
+      width: 50%;
       border-radius: 10px;
       margin-bottom: 20px;
+
     }
 
-    .back-btn, .add-btn, .add-to-cart {
+    .back-btn,
+    .add-btn,
+    .add-to-cart {
       display: inline-block;
       margin-top: 20px;
       background: #ff7f50;
@@ -90,6 +94,7 @@
     .add-ingredient button:hover {
       background: #3e8e41;
     }
+
     nav {
       background-color: #ff7f50;
       padding: 1rem 2rem;
@@ -107,15 +112,71 @@
       margin-left: 15px;
       font-weight: bold;
     }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff7f50;
+        padding: 1rem;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
   </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      nav.classList.toggle("show");
+    }
+  </script>
+
 </head>
+
 <body>
+  <nav>
+    <div><strong>🍴 Baladi Bite</strong></div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+  </nav>
   <header>
     <h1 id="meal-title">Loading...</h1>
   </header>
 
   <div class="content">
     <img id="meal-image" src="" alt="Meal Image">
+    <h2>Price</h2>
+    <p id="meal-price"></p>
     <h2>Description</h2>
     <p id="meal-description"></p>
 
@@ -138,275 +199,103 @@
     const mealName = params.get("name");
 
     const formattedTitle = mealName ? mealName.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : "";
+    //CHANGE THIS TO YOUR PRICES
     const allMeals = {
-      manoushe_zaatar: {
-    title: "Manoushe Zaatar",
-    image: "images/manoushe_zaatar.jpg",
-    description: "Zaatar flatbread made with thyme, olive oil, and dough.",
-    ingredients: ["Thyme", "Olive Oil", "Dough"]
-  },
-  kibbeh: {
-    title: "Kibbeh",
-    image: "images/Kibbeh.png",
-    description: "Spiced bulgur meat shell filled with flavor.",
-    ingredients: ["Minced Meat", "Bulgur", "Onions"]
-  },
-  fattoush: {
-    title: "Fattoush",
-    image: "images/fattoush.jpg",
-    description: "Crunchy Levantine salad with tangy dressing.",
-    ingredients: ["Lettuce", "Radish", "Fried Bread"]
-  },
-  shawarma: {
-    title: "Shawarma",
-    image: "images/shawarma.jpeg",
-    description: "Juicy marinated meat with garlic and pickles.",
-    ingredients: ["Beef", "Garlic", "Pickles"]
-  },
-  beid_bi_awarma: {
-    title: "Beid bi Awarma",
-    image: "images/beid_bi_awarma.jpg",
-    description: "Traditional Lebanese eggs with lamb fat.",
-    ingredients: ["Eggs", "Lamb Fat"]
-  },
-  batata_harra: {
-    title: "Batata Harra",
-    image: "images/batata_harra.jpg",
-    description: "Spicy potatoes",
-    ingredients: ["Potatoes", "Cilantro", "Garlic"]
-  },
-  warak_enab: {
-    title: "Warak Enab",
-    image: "images/warak_enab.jpg",
-    description: "Stuffed vine leaves",
-    ingredients: ["Grape Leaves", "Rice", "Lemon"]
-  },
-  mujadara: {
-    title: "Mujadara",
-    image: "images/mujadara.jpg",
-    description: "Lentils and rice",
-    ingredients: ["Lentils", "Rice", "Onions"]
-  },
-  sujuk: {
-    title: "Sujuk",
-    image: "images/sujuk.jpg",
-    description: "Spicy Lebanese sausage",
-    ingredients: ["Beef", "Spices", "Garlic"]
-  },
-  fatteh: {
-    title: "Fatteh",
-    image: "images/fatteh.jpg",
-    description: "Chickpea yogurt dish",
-    ingredients: ["Yogurt", "Chickpeas", "Bread"]
-  },
-  samke_harra: {
-    title: "Samke Harra",
-    image: "images/samke_harra.jpg",
-    description: "Spicy baked fish",
-    ingredients: ["Fish", "Tahini", "Chili"]
-  },
-  freekeh: {
-    title: "Freekeh",
-    image: "images/freekeh.jpg",
-    description: "Roasted green wheat dish",
-    ingredients: ["Freekeh", "Chicken", "Cinnamon"]
-  },
-  halloumi: {
-    title: "Halloumi",
-    image: "images/halloumi.jpg",
-    description: "Grilled cheese slices",
-    ingredients: ["Halloumi", "Olive Oil"]
-  },
-  baklava: {
-    title: "Baklava",
-    image: "images/baklava.jpg",
-    description: "Layered dessert",
-    ingredients: ["Phyllo", "Nuts", "Syrup"]
-  },
-  maamoul: {
-    title: "Maamoul",
-    image: "images/maamoul.jpg",
-    description: "Date-filled cookies",
-    ingredients: ["Semolina", "Dates", "Butter"]
-  },
-  sfiha: {
-    title: "Sfiha",
-    image: "images/sfiha.jfif",
-    description: "Mini meat pies",
-    ingredients: ["Lamb", "Tomatoes", "Onion"]
-  },
-  arayes: {
-    title: "Arayes",
-    image: "images/arayes.jpg",
-    description: "Stuffed grilled pita",
-    ingredients: ["Pita", "Kafta"]
-  },
-  lentil_soup: {
-    title: "Lentil Soup",
-    image: "images/lentil_soup.jfif",
-    description: "Warm comfort soup",
-    ingredients: ["Lentils", "Carrot", "Onion"]
-  },
-  makloubeh: {
-    title: "Makloubeh",
-    image: "images/makloube.jpg",
-    description: "Upside-down rice dish",
-    ingredients: ["Rice", "Eggplant", "Chicken"]
-  },
-  knafeh: {
-    title: "Knafeh",
-    image: "images/knafeh.jpg",
-    description: "Cheese and semolina dessert",
-    ingredients: ["Cheese", "Semolina", "Syrup"]
-  },
-  malfouf: {
-    title: "Malfouf",
-    image: "images/malfouf.webp",
-    description: "Stuffed cabbage rolls",
-    ingredients: ["Cabbage", "Rice", "Meat"]
-  },
-  znood_el_sit: {
-    title: "Znood El Sit",
-    image: "images/znood el sit.jfif",
-    description: "Cream-filled phyllo rolls",
-    ingredients: ["Phyllo", "Cream", "Syrup"]
-  },
-  balila: {
-    title: "Balila",
-    image: "images/balila.jpg",
-    description: "Warm chickpea dish",
-    ingredients: ["Chickpeas", "Garlic", "Lemon"]
-  },
-  loubieh_bzeit: {
-    title: "Loubieh Bzeit",
-    image: "images/loubieh bzeit.jfif",
-    description: "Green beans in olive oil",
-    ingredients: ["Green Beans", "Tomato", "Garlic"]
-  },
-  fried_cauliflower: {
-    title: "Fried Cauliflower",
-    image: "images/Fried califlower.jfif",
-    description: "Golden brown bites",
-    ingredients: ["Cauliflower", "Tahini"]
-  },
-  makanek: {
-    title: "Makanek",
-    image: "images/Makanek.jfif",
-    description: "Lebanese sausages",
-    ingredients: ["Sausage", "Pomegranate Molasses"]
-  },
-  beid_bi_awarma: {
-    title: "Beid bi Awarma",
-    image: "images/Beid b awarma.jfif",
-    description: "Eggs & meat fat",
-    ingredients: ["Eggs", "Lamb fat"]
-},
-rice_pudding: {
-    title: "Rice Pudding",
-    image: "images/rice_pudding.jpg",
-    description: "Milk-based dessert",
-    ingredients: ["Milk", "Rice", "Sugar"]
-  },
-  avocado_toast: {
-    title: "Avocado Toast",
-    image: "images/avocado_toast.jpg",
-    description: "Trendy open-faced toast",
-    ingredients: ["Avocado", "Bread", "Egg"]
-  },
-  pizza: {
-    title: "Pizza",
-    image: "images/pizza.jpg",
-    description: "Classic margherita",
-    ingredients: ["Tomato", "Cheese", "Basil"]
-  },
-  burger: {
-    title: "Burger",
-    image: "images/burger.jpg",
-    description: "Juicy cheeseburger",
-    ingredients: ["Beef", "Cheddar", "Lettuce"]
-  },
-  pasta_alfredo: {
-    title: "Pasta Alfredo",
-    image: "images/pasta_alfredo.jpg",
-    description: "Creamy white sauce pasta",
-    ingredients: ["Pasta", "Cream", "Parmesan"]
-  },
-  pad_thai: {
-    title: "Pad Thai",
-    image: "images/pad_thai.jpg",
-    description: "Thai noodle stir-fry",
-    ingredients: ["Noodles", "Peanuts", "Egg"]
-  },
-  butter_chicken: {
-    title: "Butter Chicken",
-    image: "images/butter_chicken.jpg",
-    description: "Indian tomato curry",
-    ingredients: ["Chicken", "Cream", "Tomato"]
-  },
-  tacos: {
-    title: "Tacos",
-    image: "images/tacos.jpg",
-    description: "Mexican stuffed tortillas",
-    ingredients: ["Tortillas", "Beef", "Salsa"]
-  },
-  grilled_chicken: {
-    title: "Grilled Chicken",
-    image: "images/grilled_chicken.jpg",
-    description: "Spiced grilled fillet",
-    ingredients: ["Chicken", "Paprika", "Garlic"]
-  },
-  steak: {
-    title: "Steak",
-    image: "images/steak.jpg",
-    description: "Seared beef steak",
-    ingredients: ["Beef", "Salt", "Pepper"]
-  },
-  chicken_caesar: {
-    title: "Chicken Caesar",
-    image: "images/chicken_caesar.jpg",
-    description: "Classic salad",
-    ingredients: ["Chicken", "Lettuce", "Croutons"]
-  },
-  fruit_bowl: {
-    title: "Fruit Bowl",
-    image: "images/fruit_bowl.jpg",
-    description: "Refreshing fresh fruits",
-    ingredients: ["Banana", "Apple", "Orange"]
-  },
-  mango_smoothie: {
-    title: "Mango Smoothie",
-    image: "images/mango_smoothie.jpg",
-    description: "Tropical drink",
-    ingredients: ["Mango", "Yogurt", "Honey"]
-  },
-  crepes: {
-    title: "Crepes",
-    image: "images/crepes.jpg",
-    description: "Thin pancakes",
-    ingredients: ["Flour", "Egg", "Milk"]
-  },
-  french_toast: {
-    title: "French Toast",
-    image: "images/french_toast.jpg",
-    description: "Egg-soaked bread",
-    ingredients: ["Bread", "Egg", "Cinnamon"]
-  },
-  waffles: {
-    title: "Waffles",
-    image: "images/waffles.jpg",
-    description: "Crispy & golden",
-    ingredients: ["Flour", "Milk", "Egg"]
-  },
-  pancakes: {
-    title: "Pancakes",
-    image: "images/pancakes.jpg",
-    description: "Fluffy breakfast stack",
-    ingredients: ["Flour", "Milk", "Egg"]
-  }
-};
+      shawarma: {
+        title: "Shawarma",
+        image: "images/shawarma.jpeg",
+        description: "Juicy marinated meat with garlic and pickles.",
+        ingredients: ["Beef", "Garlic", "Pickles"],
+        price: 12.99
+      },
+      beid_bi_awarma: {
+        title: "Beid bi Awarma",
+        image: "images/Beidbawarma.jfif",
+        description: "Traditional Lebanese eggs with lamb fat.",
+        ingredients: ["Eggs", "Lamb Fat"],
+        price: 10.99
+      },
+      sfiha: {
+        title: "Sfiha",
+        image: "images/sfiha.jfif",
+        description: "Mini meat pies",
+        ingredients: ["Lamb", "Tomatoes", "Onion"],
+        price: 9.99
+      },
+      arayes: {
+        title: "Arayes",
+        image: "images/Arayes.jpg",
+        description: "Stuffed grilled pita",
+        ingredients: ["Pita", "Kafta"],
+        price: 11.99
+      },
+      lentil_soup: {
+        title: "Lentil Soup",
+        image: "images/lentil_soup.jfif",
+        description: "Warm comfort soup",
+        ingredients: ["Lentils", "Carrot", "Onion"],
+        price: 7.99
+      },
+      makloubeh: {
+        title: "Makloubeh",
+        image: "images/Makloube.jpg",
+        description: "Upside-down rice dish",
+        ingredients: ["Rice", "Eggplant", "Chicken"],
+        price: 14.99
+      },
+      knafeh: {
+        title: "Knafeh",
+        image: "images/Knafeh.jpg",
+        description: "Cheese and semolina dessert",
+        ingredients: ["Cheese", "Semolina", "Syrup"],
+        price: 5.99
+      },
+      malfouf: {
+        title: "Malfouf",
+        image: "images/Malfouf.webp",
+        description: "Stuffed cabbage rolls",
+        ingredients: ["Cabbage", "Rice", "Meat"],
+        price: 8.99
+      },
+      znood_el_sit: {
+        title: "Znood El Sit",
+        image: "images/Znoodelsit.jfif",
+        description: "Cream-filled phyllo rolls",
+        ingredients: ["Phyllo", "Cream", "Syrup"],
+        price: 6.99
+      },
+      balila: {
+        title: "Balila",
+        image: "images/Balila.jpg",
+        description: "Warm chickpea dish",
+        ingredients: ["Chickpeas", "Garlic", "Lemon"],
+        price: 4.99
+      },
+      loubieh_bzeit: {
+        title: "Loubieh Bzeit",
+        image: "images/Loubiehbzeit.jfif",
+        description: "Green beans in olive oil",
+        ingredients: ["Green Beans", "Tomato", "Garlic"],
+        price: 5.49
+      },
+      fried_cauliflower: {
+        title: "Fried Cauliflower",
+        image: "images/Friedcaliflower.jfif",
+        description: "Golden brown bites",
+        ingredients: ["Cauliflower", "Tahini"],
+        price: 6.49
+      },
+      makanek: {
+        title: "Makanek",
+        image: "images/Makanek.jfif",
+        description: "Lebanese sausages",
+        ingredients: ["Sausage", "Pomegranate Molasses"],
+        price: 13.99
+      },
+    };
 
-    
-const meal = allMeals[mealName];
+
+    const meal = allMeals[mealName];
 
     const ingredientList = document.getElementById("ingredient-list");
 
@@ -440,7 +329,8 @@ const meal = allMeals[mealName];
       cart.push({
         name: meal.title,
         ingredients: meal.ingredients,
-        image: meal.image
+        image: meal.image,
+        price: meal.price || 9.99 // Default price if not available
       });
       localStorage.setItem('cart', JSON.stringify(cart));
       alert("Meal added to cart!");
@@ -451,6 +341,7 @@ const meal = allMeals[mealName];
       document.getElementById("meal-title").textContent = meal.title;
       document.getElementById("meal-image").src = meal.image;
       document.getElementById("meal-description").textContent = meal.description;
+      document.getElementById("meal-price").textContent = meal.price ? `$${meal.price.toFixed(2)}` : "Price not available";
       renderIngredients();
     } else {
       document.getElementById("meal-title").textContent = "Meal Not Found";
@@ -458,4 +349,5 @@ const meal = allMeals[mealName];
     }
   </script>
 </body>
+
 </html>
